@@ -5,7 +5,6 @@ import { SliderThumb } from "@mui/material/Slider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import IOSSwitch from "../CustomStyles/IOSSwitch";
 import AirbnbSlider from "../CustomStyles/AirbnbSlider";
-import CustomizedDot from "../CustomStyles/CustomDot";
 import {
   LineChart,
   Line,
@@ -75,9 +74,6 @@ const PensionCalculator = () => {
   const [includeStatePension, setIncludeStatePension] = useState(true);
   const [takeTaxFree, setTakeTaxFree] = useState(true);
   const [tooltipActive, setTooltipActive] = useState(true); // Set tooltip to active by default
-
-  // console.log("futurePensionPotSeven:- ",futurePensionPotSeven)
-  // console.log("futurePensionPotThree:- ",futurePensionPotThree)
 
   useEffect(() => {
     // Calculate the future pension pot
