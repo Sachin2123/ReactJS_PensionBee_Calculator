@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
   Customized,
 } from "recharts";
-import { HideImage } from "@mui/icons-material";
+import { HideImage, Margin } from "@mui/icons-material";
 
 function AirbnbThumbComponent(props) {
   const { children, ...other } = props;
@@ -370,7 +370,6 @@ const PensionCalculator = () => {
       });
     }
   }
-  console.log(chartData);
 
   // Custom Tooltip Component for Chart
   const CustomTooltip = ({ active, payload, label }) => {
@@ -393,11 +392,11 @@ const PensionCalculator = () => {
             borderRadius: "10px",
           }}
         >
-          <div style={{ display: "flex", gap: "15px", fontWeight: "bold" }}>
+          {/* <div style={{ display: "flex", gap: "15px", fontWeight: "bold" }}>
             <span style={{ color: "#FF5F15" }}>ER at 5%</span>
             <span style={{ color: "#003366" }}>ER at 3%</span>
             <span style={{ color: "#FFB400" }}>ER at 7%</span>
-          </div>
+          </div> */}
           <p
             className="value1"
             style={{ color: "#FF5F15", fontWeight: "bold" }}
@@ -517,7 +516,26 @@ const PensionCalculator = () => {
               tickFormatter={(value) => `£${(value / 1000).toFixed(0)}K`} // Format the amount as thousands with pound sign
             />
             <Tooltip content={<CustomTooltip />} />
-
+            <Legend
+              verticalAlign="bottom"
+              height={23}
+              payload={[
+                { value: "ER at 5%", type: "line", color: "#FF5F15" },
+                { value: "ER at 3%", type: "line", color: "#003366" },
+                { value: "ER at 7%", type: "line", color: "#FFB400" },
+              ]}
+              formatter={(value) => (
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    paddingLeft: "5px",
+                    paddingRight: "10px",
+                  }}
+                >
+                  {value}
+                </div>
+              )}
+            />
             {/* Red Line */}
             <Line
               dot={<CustomDot />} // Use the custom dot here
