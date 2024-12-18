@@ -393,12 +393,15 @@ const PensionCalculator = () => {
             borderRadius: "10px",
           }}
         >
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", gap: "15px", fontWeight: "bold" }}>
             <span style={{ color: "#FF5F15" }}>ER at 5%</span>
             <span style={{ color: "#003366" }}>ER at 3%</span>
             <span style={{ color: "#FFB400" }}>ER at 7%</span>
           </div>
-          <p className="value1" style={{ color: "#FF5F15" }}>
+          <p
+            className="value1"
+            style={{ color: "#FF5F15", fontWeight: "bold" }}
+          >
             <span
               style={{
                 backgroundColor: "#FF5F15",
@@ -411,7 +414,10 @@ const PensionCalculator = () => {
             ></span>
             {`Current Projection £${peakData.value1.toLocaleString()}`}
           </p>
-          <p className="value2" style={{ color: "#003366" }}>
+          <p
+            className="value2"
+            style={{ color: "#003366", fontWeight: "bold" }}
+          >
             <span
               style={{
                 backgroundColor: "#003366",
@@ -424,7 +430,10 @@ const PensionCalculator = () => {
             ></span>
             {`Current Projection £${peakData.value2.toLocaleString()}`}
           </p>
-          <p className="value3" style={{ color: "#FFB400" }}>
+          <p
+            className="value3"
+            style={{ color: "#FFB400", fontWeight: "bold" }}
+          >
             <span
               style={{
                 backgroundColor: "#FFB400",
@@ -442,6 +451,41 @@ const PensionCalculator = () => {
     }
 
     return null;
+  };
+
+  // Custom Dots for Specific Ages
+  const CustomDot = (props) => {
+    const { cx, cy, value, payload, dataKey } = props;
+
+    // Check if age is 55, 56, or the specified age values and don't render the dot for those ages
+    if (
+      payload.age === "Age 55" ||
+      payload.age === "Age 56" ||
+      payload.age === `Age ${currentAge}` ||
+      payload.age === `Age ${PredictedAge}`
+    ) {
+      return null; // Don't render dot for these ages
+    }
+
+    // Set the color based on the dataKey
+    let dotColor = "#FF5F15"; // Default color for value1
+
+    if (dataKey === "value2") {
+      dotColor = "#003366"; // Navy Blue for value2
+    } else if (dataKey === "value3") {
+      dotColor = "#FFB400"; // Golden Yellow for value3
+    }
+
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill={dotColor}
+        stroke="#fff"
+        strokeWidth={2}
+      />
+    );
   };
 
   return (
@@ -473,43 +517,30 @@ const PensionCalculator = () => {
               tickFormatter={(value) => `£${(value / 1000).toFixed(0)}K`} // Format the amount as thousands with pound sign
             />
             <Tooltip content={<CustomTooltip />} />
-            {/* Navy Blue Line */}
-            <Line
-              dot={{
-                fill: "#003366",
-                r: 6,
-                stroke: "#fff",
-                strokeWidth: 2,
-              }}
-              type="monotone"
-              dataKey="value2"
-              stroke="#003366" // Navy Blue for the line
-              strokeWidth={3}
-              activeDot={{ r: 8 }}
-            />
+
             {/* Red Line */}
             <Line
-              dot={{
-                fill: "#FF5F15",
-                r: 6,
-                stroke: "#fff",
-                strokeWidth: 2,
-              }}
-              type="monotone"
+              dot={<CustomDot />} // Use the custom dot here
+              type="linear"
               dataKey="value1"
               stroke="#FF5F15"
               strokeWidth={3}
               activeDot={{ r: 8 }}
             />
+            {/* Navy Blue Line */}
+            <Line
+              dot={<CustomDot />} // Use the custom dot here
+              type="linear"
+              dataKey="value2"
+              stroke="#003366" // Navy Blue for the line
+              strokeWidth={3}
+              activeDot={{ r: 8 }}
+            />
+
             {/* Golden Yellow Line */}
             <Line
-              dot={{
-                fill: "#FFB400",
-                r: 6,
-                stroke: "#fff",
-                strokeWidth: 2,
-              }}
-              type="monotone"
+              dot={<CustomDot />} // Use the custom dot here
+              type="linear"
               dataKey="value3"
               stroke="#FFB400"
               strokeWidth={3}
