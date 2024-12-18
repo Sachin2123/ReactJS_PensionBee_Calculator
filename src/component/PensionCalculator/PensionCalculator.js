@@ -16,6 +16,7 @@ import {
   ResponsiveContainer,
   Customized,
 } from "recharts";
+import { HideImage } from "@mui/icons-material";
 
 function AirbnbThumbComponent(props) {
   const { children, ...other } = props;
@@ -305,60 +306,86 @@ const PensionCalculator = () => {
   for (let age = currentAge; age <= 300; age++) {
     // console.log("age:- ",age)
 
-    if (age >= currentAge && age <= 55) {
-      console.log("age:- ", age);
-      console.log("currentAge:- ", currentAge);
-      console.log("futurePensionPot:- ", futurePensionPot);
-    }
-
+    // 1st Point
     if (age === currentAge) {
       chartData.push({
         age: `Age ${age}`,
         value1: "", // Yellow line start from current age
         value2: "",
         value3: "",
+        hide: true,
       });
     }
 
     // 2nd Point
-    // Yellow line will on peak on their retirementAge
+    // Handle the dip at age 55 if the tax-free option is enabled
+    if (age === 55 && takeTaxFree === true) {
+      const value1At55 = Math.ceil(futurePensionPot - futurePensionPot * 0.25);
+      const value2At55 = Math.ceil(
+        futurePensionPotThree - futurePensionPotThree * 0.25
+      );
+      const value3At55 = Math.ceil(
+        futurePensionPotSeven - futurePensionPotSeven * 0.25
+      );
+
+      chartData.push({
+        age: `Age ${age}`,
+        value1: value1At55, // line dips due to 25% tax-free withdrawal
+        value2: value2At55,
+        value3: value3At55,
+        hide: true,
+      });
+
+      // Add recovery at age 56 based on remaining growth
+      const value1At56 = value1At55 * (1 + expectedReturnRate / 100);
+      const value2At56 = value2At55 * (1 + threeexpectedReturnRate / 100);
+      const value3At56 = value3At55 * (1 + sevenexpectedReturnRate / 100);
+
+      // 3rd Point
+      chartData.push({
+        age: `Age ${age + 1}`,
+        value1: value1At56 * 0.85, //  line rises again at age 56
+        value2: value2At56 * 0.85,
+        value3: value3At56 * 0.85,
+        hide: true,
+      });
+    }
+
+    // 4th Point
+    // line will on peak on their retirementAge
     if (age === retireAge) {
       chartData.push({
         age: `Age ${age}`,
-        value1: futurePensionPot, // Yellow line will on peak on their retirementAge
+        value1: futurePensionPot, // line will on peak on their retirementAge
         value2: futurePensionPotThree,
         value3: futurePensionPotSeven,
+        hide: false,
       });
     }
 
-    if (age === 55 && takeTaxFree === true) {
-      console.log("futurePensionPot:- ", futurePensionPot);
-      chartData.push({
-        age: `Age ${age}`,
-        value1: futurePensionPot - futurePensionPot * 0.25,
-        value2: futurePensionPotThree - futurePensionPotThree * 0.25,
-        value3: futurePensionPotSeven - futurePensionPotSeven * 0.25,
-      });
-    }
-
-    // 3rd Point
-    // Yellow line will decrease and at their PredictedAge
+    // 5th Point
+    // line will decrease and at their PredictedAge
     if (age === PredictedAge) {
       chartData.push({
         age: `Age ${age}`,
-        value1: "", // Yellow line will decrease and at their PredictedAge
+        value1: "", // line will decrease and at their PredictedAge
         value2: "",
         value3: "",
+        hide: true,
       });
     }
   }
 
-  // Custom Tooltip Component
+  // Custom Tooltip Component for Chart
   const CustomTooltip = ({ active, payload, label }) => {
-    // Always display tooltip when at the peak
-    const peakData = chartData.find((item) => item.age === `Age ${retireAge}`);
+    if (!active || !payload || payload.length === 0) return null;
 
-    if (peakData) {
+    // Find peak data for retireAge
+    const peakData = chartData.find((item) => item.age === `Age ${retireAge}`);
+    const currentAgeData = payload[0].payload;
+
+    // Only show the tooltip at retireAge or specific logic points
+    if (currentAgeData.age === `Age ${retireAge}`) {
       return (
         <div
           className="custom-tooltip"
@@ -370,7 +397,6 @@ const PensionCalculator = () => {
             borderRadius: "10px",
           }}
         >
-          {/* <p className="label">{` ${peakData.age}`}</p> */}
           <div style={{ display: "flex", gap: "15px" }}>
             <span style={{ color: "#FF5F15" }}>ER at 5%</span>
             <span style={{ color: "black" }}>ER at 3%</span>
@@ -389,7 +415,7 @@ const PensionCalculator = () => {
             ></span>
             {`Current Projection £${peakData.value1.toLocaleString()}`}
           </p>
-          <p className="valu02e" style={{ color: "black" }}>
+          <p className="value2" style={{ color: "black" }}>
             <span
               style={{
                 backgroundColor: "black",
@@ -418,7 +444,47 @@ const PensionCalculator = () => {
         </div>
       );
     }
+
     return null;
+  };
+
+  // Custom Legend Cmomponent for Chart
+  const CustomLegend = () => {
+    const legendItems = [
+      { label: "Red Line", color: "#FF5F15" },
+      { label: "Black Line", color: "black" },
+      { label: "Blue Line", color: "#33C4FF" },
+    ];
+
+    return (
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+      >
+        {legendItems.map((item, index) => (
+          <div
+            key={index}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              margin: "0 15px",
+              fontSize: "14px",
+            }}
+          >
+            <span
+              style={{
+                backgroundColor: item.color,
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                display: "inline-block",
+                marginRight: "8px",
+              }}
+            ></span>
+            {item.label}
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -430,7 +496,7 @@ const PensionCalculator = () => {
     >
       <Box
         sx={{
-          width: { xs: "100%", sm: "80%", md: "100%" },
+          width: { xs: "100%", sm: "80%", md: "80%" },
           backgroundColor: "#fff",
           boxShadow: 2,
           borderRadius: 2,
@@ -447,36 +513,38 @@ const PensionCalculator = () => {
             <CartesianGrid strokeDasharray="" stroke="#D3D3D3	" />
             <XAxis dataKey="age" />
             <YAxis />
-            <Tooltip content={<CustomTooltip />} active={tooltipActive} />
+            <Tooltip content={<CustomTooltip />} />
             <Legend />
+            <CustomLegend />
 
             {/* Black Line */}
             <Line
-              // dot={<CustomizedDot />}
-              dot={{ fill: "black", r: 4 }}
+              dot={{ fill: "black", r: 5 }}
               type=""
               dataKey="value2"
               stroke="black"
-              // strokeDasharray="8 8"
-              strokeWidth={2}
+              strokeWidth={3}
+              activeDot={{ r: 8 }} // Highlight the peak
             />
+
             {/* Yellow Line */}
             <Line
-              dot={{ fill: "#FF5F15", r: 4 }}
+              dot={{ fill: "#FF5F15", r: 5 }}
               type=""
               dataKey="value1"
               stroke="#FF5F15"
-              strokeWidth={2}
+              strokeWidth={3}
               activeDot={{ r: 8 }} // Highlight the peak
             />
 
             {/* Blue Line */}
             <Line
-              dot={{ fill: "#33C4FF", r: 4 }}
+              dot={{ fill: "#33C4FF", r: 5 }}
               type=""
               dataKey="value3"
               stroke="#33C4FF"
-              strokeWidth={2}
+              strokeWidth={3}
+              activeDot={{ r: 8 }} // Highlight the peak
             />
             {/* <Line
               dot={{ fill: "#6A1B9A", r: 6 }} 
