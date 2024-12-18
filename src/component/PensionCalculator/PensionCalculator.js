@@ -16,7 +16,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Customized,
 } from "recharts";
 
 function AirbnbThumbComponent(props) {
@@ -55,10 +54,10 @@ const PensionCalculator = () => {
   const [sixthvalue, setSixthValue] = useState(0);
 
   // 7th Slider
-  const [seventhvalue, setSeventhValue] = useState(172000);
+  // const [seventhvalue, setSeventhValue] = useState(172000);
 
   // 8th Slider
-  const [eigthvalue, seteigthValue] = useState(18000);
+  // const [eigthvalue, seteigthValue] = useState(18000);
 
   // State variables for pension calculation
   const [currentPension, setCurrentPension] = useState(50000);
@@ -75,7 +74,7 @@ const PensionCalculator = () => {
   const [futurePensionPotThree, setFuturePensionPotThree] = useState(0); // Expected return of 3%
   const [includeStatePension, setIncludeStatePension] = useState(true);
   const [takeTaxFree, setTakeTaxFree] = useState(true);
-  const [tooltipActive, setTooltipActive] = useState(true); // Set tooltip to active by default
+  // const [tooltipActive, setTooltipActive] = useState(true); // Set tooltip to active by default
 
   useEffect(() => {
     // Calculate the future pension pot
@@ -197,10 +196,6 @@ const PensionCalculator = () => {
       F7 -= taxFreeLumpSum;
     }
 
-    // console.log("F5:- ",F5.toFixed(0))
-    // console.log("F3:- ",F3.toFixed(0))
-    // console.log("F7:- ",F7.toFixed(0))
-
     return { F5, F3, F7 };
   };
 
@@ -252,7 +247,6 @@ const PensionCalculator = () => {
   // Function for Third Slider
   const handleThirdChange = (event, newValue) => {
     setThirdValue(newValue);
-    // setExpectedReturnRate(newValue);
   };
 
   // Function for Fourth Slider
@@ -287,12 +281,10 @@ const PensionCalculator = () => {
 
   const handleIncludeStatePensionChange = (event) => {
     setIncludeStatePension(event.target.checked);
-    // console.log("handleIncludeStatePensionChange:- ",event.target.checked)
   };
 
   const handleTakeTaxFreeChange = (event) => {
     setTakeTaxFree(event.target.checked);
-    console.log("handleTakeTaxFreeChange:- ", event.target.checked);
   };
 
   // Retirement age is stored in retireAge, so that i can display "futurePensionPot" on their retirementAge.
@@ -393,12 +385,6 @@ const PensionCalculator = () => {
             borderRadius: "10px",
           }}
         >
-          {/* <div style={{ display: "flex", gap: "15px", fontWeight: "bold" }}>
-            <span style={{ color: "#FF5F15" }}>ER at 5%</span>
-            <span style={{ color: "#003366" }}>ER at 3%</span>
-            <span style={{ color: "#FFB400" }}>ER at 7%</span>
-          </div> */}
-
           <p
             className="value2"
             style={{ color: "#003366", fontWeight: "bold" }}
