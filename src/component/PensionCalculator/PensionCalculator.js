@@ -298,19 +298,14 @@ const PensionCalculator = () => {
   const retireAge = retirementAge;
   const PredictedAge = Math.floor(futurePensionPot / Thirdvalue + retireAge);
 
-  const taxFree = futurePensionPot - futurePensionPot * 0.25;
-
-  // 1st Point
-  // Yellow line start from current age
   const chartData = [];
   for (let age = currentAge; age <= 300; age++) {
-    // console.log("age:- ",age)
-
     // 1st Point
+    // line starts from current age
     if (age === currentAge) {
       chartData.push({
         age: `Age ${age}`,
-        value1: "", // Yellow line start from current age
+        value1: "", // line start from current age
         value2: "",
         value3: "",
         hide: true,
@@ -375,6 +370,7 @@ const PensionCalculator = () => {
       });
     }
   }
+  console.log(chartData);
 
   // Custom Tooltip Component for Chart
   const CustomTooltip = ({ active, payload, label }) => {
@@ -399,8 +395,8 @@ const PensionCalculator = () => {
         >
           <div style={{ display: "flex", gap: "15px" }}>
             <span style={{ color: "#FF5F15" }}>ER at 5%</span>
-            <span style={{ color: "black" }}>ER at 3%</span>
-            <span style={{ color: "#33C4FF" }}>ER at 7%</span>
+            <span style={{ color: "#003366" }}>ER at 3%</span>
+            <span style={{ color: "#FFB400" }}>ER at 7%</span>
           </div>
           <p className="value1" style={{ color: "#FF5F15" }}>
             <span
@@ -415,10 +411,10 @@ const PensionCalculator = () => {
             ></span>
             {`Current Projection £${peakData.value1.toLocaleString()}`}
           </p>
-          <p className="value2" style={{ color: "black" }}>
+          <p className="value2" style={{ color: "#003366" }}>
             <span
               style={{
-                backgroundColor: "black",
+                backgroundColor: "#003366",
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
@@ -428,10 +424,10 @@ const PensionCalculator = () => {
             ></span>
             {`Current Projection £${peakData.value2.toLocaleString()}`}
           </p>
-          <p className="value3" style={{ color: "#33C4FF" }}>
+          <p className="value3" style={{ color: "#FFB400" }}>
             <span
               style={{
-                backgroundColor: "#33C4FF",
+                backgroundColor: "#FFB400",
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
@@ -446,45 +442,6 @@ const PensionCalculator = () => {
     }
 
     return null;
-  };
-
-  // Custom Legend Cmomponent for Chart
-  const CustomLegend = () => {
-    const legendItems = [
-      { label: "Red Line", color: "#FF5F15" },
-      { label: "Black Line", color: "black" },
-      { label: "Blue Line", color: "#33C4FF" },
-    ];
-
-    return (
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
-      >
-        {legendItems.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              margin: "0 15px",
-              fontSize: "14px",
-            }}
-          >
-            <span
-              style={{
-                backgroundColor: item.color,
-                width: "12px",
-                height: "12px",
-                borderRadius: "50%",
-                display: "inline-block",
-                marginRight: "8px",
-              }}
-            ></span>
-            {item.label}
-          </div>
-        ))}
-      </div>
-    );
   };
 
   return (
@@ -510,51 +467,54 @@ const PensionCalculator = () => {
         {/* Charts */}
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="" stroke="#D3D3D3	" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#D3D3D3" />
             <XAxis dataKey="age" />
-            <YAxis />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <CustomLegend />
-
-            {/* Black Line */}
-            <Line
-              dot={{ fill: "black", r: 5 }}
-              type=""
-              dataKey="value2"
-              stroke="black"
-              strokeWidth={3}
-              activeDot={{ r: 8 }} // Highlight the peak
+            <YAxis
+              tickFormatter={(value) => `£${(value / 1000).toFixed(0)}K`} // Format the amount as thousands with pound sign
             />
-
-            {/* Yellow Line */}
+            <Tooltip content={<CustomTooltip />} />
+            {/* Navy Blue Line */}
             <Line
-              dot={{ fill: "#FF5F15", r: 5 }}
-              type=""
+              dot={{
+                fill: "#003366",
+                r: 6,
+                stroke: "#fff",
+                strokeWidth: 2,
+              }}
+              type="monotone"
+              dataKey="value2"
+              stroke="#003366" // Navy Blue for the line
+              strokeWidth={3}
+              activeDot={{ r: 8 }}
+            />
+            {/* Red Line */}
+            <Line
+              dot={{
+                fill: "#FF5F15",
+                r: 6,
+                stroke: "#fff",
+                strokeWidth: 2,
+              }}
+              type="monotone"
               dataKey="value1"
               stroke="#FF5F15"
               strokeWidth={3}
-              activeDot={{ r: 8 }} // Highlight the peak
+              activeDot={{ r: 8 }}
             />
-
-            {/* Blue Line */}
+            {/* Golden Yellow Line */}
             <Line
-              dot={{ fill: "#33C4FF", r: 5 }}
-              type=""
+              dot={{
+                fill: "#FFB400",
+                r: 6,
+                stroke: "#fff",
+                strokeWidth: 2,
+              }}
+              type="monotone"
               dataKey="value3"
-              stroke="#33C4FF"
+              stroke="#FFB400"
               strokeWidth={3}
-              activeDot={{ r: 8 }} // Highlight the peak
+              activeDot={{ r: 8 }}
             />
-            {/* <Line
-              dot={{ fill: "#6A1B9A", r: 6 }} 
-              type=""
-              dataKey="value4"
-              stroke="#6A1B9A"
-              strokeWidth={3}
-            /> */}
-
-            <Customized component={() => <CustomTooltip />} />
           </LineChart>
         </ResponsiveContainer>
       </Box>
