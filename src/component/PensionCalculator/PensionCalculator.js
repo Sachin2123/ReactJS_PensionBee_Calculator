@@ -63,9 +63,6 @@ const PensionCalculator = () => {
   const [currentPension, setCurrentPension] = useState(50000);
   const [currentAge, setCurrentAge] = useState(36);
   const [retirementAge, setRetirementAge] = useState(67);
-  const [threeexpectedReturnRate, setThreeExpectedReturnRate] = useState(3); //Expected Rate of Return :- 3%
-  const [expectedReturnRate, setExpectedReturnRate] = useState(5); //Expected Rate of Return :- 5%
-  const [sevenexpectedReturnRate, setSevenExpectedReturnRate] = useState(7); //Expected Rate of Return :- 7%
   const [personalContribution, setPersonalContribution] = useState(350);
   const [employerContribution, setEmployerContribution] = useState(250);
   const [oneTimeContribution, setOneTimeContribution] = useState(0);
@@ -74,7 +71,10 @@ const PensionCalculator = () => {
   const [futurePensionPotThree, setFuturePensionPotThree] = useState(0); // Expected return of 3%
   const [includeStatePension, setIncludeStatePension] = useState(true);
   const [takeTaxFree, setTakeTaxFree] = useState(true);
-  // const [tooltipActive, setTooltipActive] = useState(true); // Set tooltip to active by default
+
+  const threeexpectedReturnRate = 3;
+  const expectedReturnRate = 5;
+  const sevenexpectedReturnRate = 7;
 
   useEffect(() => {
     // Calculate the future pension pot
@@ -277,8 +277,7 @@ const PensionCalculator = () => {
   //   seteigthValue(newValue);
   // };
 
-  const [statePension, setStatePension] = useState(9800); // Example: £9,800 per year
-
+  const statePension = 9800; // Example: £9,800 per year
   const handleIncludeStatePensionChange = (event) => {
     setIncludeStatePension(event.target.checked);
   };
@@ -365,7 +364,7 @@ const PensionCalculator = () => {
   }
 
   // Custom Tooltip Component for Chart
-  const CustomTooltip = ({ active, payload, label }) => {
+  const CustomTooltip = ({ active, payload }) => {
     if (!active || !payload || payload.length === 0) return null;
 
     // Find peak data for retireAge
@@ -443,7 +442,7 @@ const PensionCalculator = () => {
 
   // Custom Dots for Specific Ages
   const CustomDot = (props) => {
-    const { cx, cy, value, payload, dataKey, isActive } = props;
+    const { cx, cy, payload, dataKey, isActive } = props;
 
     // Check if age is 55, 56, or the specified age values and don't render the dot for those ages
     if (
@@ -490,7 +489,7 @@ const PensionCalculator = () => {
   };
 
   const CustomActiveDot = (props) => {
-    const { cx, cy, value, payload, dataKey, isActive } = props;
+    const { cx, cy, payload, dataKey } = props;
 
     // Only render the active dot for specific ages (currentAge, retireAge, Age 55, Age 56)
     if (
