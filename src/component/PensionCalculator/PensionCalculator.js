@@ -305,6 +305,12 @@ const PensionCalculator = () => {
   for (let age = currentAge; age <= 300; age++) {
     // console.log("age:- ",age)
 
+    if (age >= currentAge && age <= 55) {
+      console.log("age:- ", age);
+      console.log("currentAge:- ", currentAge);
+      console.log("futurePensionPot:- ", futurePensionPot);
+    }
+
     if (age === currentAge) {
       chartData.push({
         age: `Age ${age}`,
@@ -359,16 +365,18 @@ const PensionCalculator = () => {
           style={{
             backgroundColor: "#fff",
             border: "2px solid #ccc",
-            padding: "30px",
+            padding: "20px",
+            textAlign: "left",
+            borderRadius: "10px",
           }}
         >
           {/* <p className="label">{` ${peakData.age}`}</p> */}
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div style={{ display: "flex", gap: "15px" }}>
             <span style={{ color: "#FF5F15" }}>ER at 5%</span>
             <span style={{ color: "black" }}>ER at 3%</span>
             <span style={{ color: "#33C4FF" }}>ER at 7%</span>
           </div>
-          <p className="value" style={{ color: "#FF5F15" }}>
+          <p className="value1" style={{ color: "#FF5F15" }}>
             <span
               style={{
                 backgroundColor: "#FF5F15",
@@ -379,9 +387,9 @@ const PensionCalculator = () => {
                 marginRight: "5px",
               }}
             ></span>
-            {`Current Projection: ${peakData.value1.toLocaleString()}`}
+            {`Current Projection £${peakData.value1.toLocaleString()}`}
           </p>
-          <p className="value" style={{ color: "black" }}>
+          <p className="valu02e" style={{ color: "black" }}>
             <span
               style={{
                 backgroundColor: "black",
@@ -392,9 +400,9 @@ const PensionCalculator = () => {
                 marginRight: "5px",
               }}
             ></span>
-            {`Current Projection: ${peakData.value2.toLocaleString()}`}
+            {`Current Projection £${peakData.value2.toLocaleString()}`}
           </p>
-          <p className="value" style={{ color: "#33C4FF" }}>
+          <p className="value3" style={{ color: "#33C4FF" }}>
             <span
               style={{
                 backgroundColor: "#33C4FF",
@@ -405,7 +413,7 @@ const PensionCalculator = () => {
                 marginRight: "5px",
               }}
             ></span>
-            {`Current Projection: ${peakData.value3.toLocaleString()}`}
+            {`Current Projection £${peakData.value3.toLocaleString()}`}
           </p>
         </div>
       );
@@ -445,30 +453,30 @@ const PensionCalculator = () => {
             {/* Black Line */}
             <Line
               // dot={<CustomizedDot />}
-              dot={{ fill: "black", r: 6 }}
+              dot={{ fill: "black", r: 4 }}
               type=""
               dataKey="value2"
               stroke="black"
               // strokeDasharray="8 8"
-              strokeWidth={3}
+              strokeWidth={2}
             />
             {/* Yellow Line */}
             <Line
-              dot={{ fill: "#FF5F15", r: 6 }}
+              dot={{ fill: "#FF5F15", r: 4 }}
               type=""
               dataKey="value1"
               stroke="#FF5F15"
-              strokeWidth={3}
+              strokeWidth={2}
               activeDot={{ r: 8 }} // Highlight the peak
             />
 
             {/* Blue Line */}
             <Line
-              dot={{ fill: "#33C4FF", r: 6 }}
+              dot={{ fill: "#33C4FF", r: 4 }}
               type=""
               dataKey="value3"
               stroke="#33C4FF"
-              strokeWidth={3}
+              strokeWidth={2}
             />
             {/* <Line
               dot={{ fill: "#6A1B9A", r: 6 }} 
