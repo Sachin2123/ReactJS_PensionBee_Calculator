@@ -16,7 +16,6 @@ import {
   ResponsiveContainer,
   Customized,
 } from "recharts";
-import { HideImage, Margin } from "@mui/icons-material";
 
 function AirbnbThumbComponent(props) {
   const { children, ...other } = props;
@@ -397,22 +396,7 @@ const PensionCalculator = () => {
             <span style={{ color: "#003366" }}>ER at 3%</span>
             <span style={{ color: "#FFB400" }}>ER at 7%</span>
           </div> */}
-          <p
-            className="value1"
-            style={{ color: "#FF5F15", fontWeight: "bold" }}
-          >
-            <span
-              style={{
-                backgroundColor: "#FF5F15",
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                display: "inline-block",
-                marginRight: "5px",
-              }}
-            ></span>
-            {`Current Projection £${peakData.value1.toLocaleString()}`}
-          </p>
+
           <p
             className="value2"
             style={{ color: "#003366", fontWeight: "bold" }}
@@ -429,6 +413,23 @@ const PensionCalculator = () => {
             ></span>
             {`Current Projection £${peakData.value2.toLocaleString()}`}
           </p>
+          <p
+            className="value1"
+            style={{ color: "#FF5F15", fontWeight: "bold" }}
+          >
+            <span
+              style={{
+                backgroundColor: "#FF5F15",
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                display: "inline-block",
+                marginRight: "5px",
+              }}
+            ></span>
+            {`Current Projection £${peakData.value1.toLocaleString()}`}
+          </p>
+
           <p
             className="value3"
             style={{ color: "#FFB400", fontWeight: "bold" }}
@@ -454,7 +455,7 @@ const PensionCalculator = () => {
 
   // Custom Dots for Specific Ages
   const CustomDot = (props) => {
-    const { cx, cy, value, payload, dataKey } = props;
+    const { cx, cy, value, payload, dataKey, isActive } = props;
 
     // Check if age is 55, 56, or the specified age values and don't render the dot for those ages
     if (
@@ -464,6 +465,55 @@ const PensionCalculator = () => {
       payload.age === `Age ${PredictedAge}`
     ) {
       return null; // Don't render dot for these ages
+    }
+
+    // Set the color based on the dataKey
+    let dotColor = "#FF5F15"; // Default color for value1
+
+    if (dataKey === "value2") {
+      dotColor = "#003366"; // Navy Blue for value2
+    } else if (dataKey === "value3") {
+      dotColor = "#FFB400"; // Golden Yellow for value3
+    }
+
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill={dotColor}
+        stroke="#fff"
+        strokeWidth={2}
+        // Only show active dot if it's not one of the restricted ages
+        style={{
+          display:
+            isActive &&
+            !(
+              payload.age === "Age 55" ||
+              payload.age === "Age 56" ||
+              payload.age === `Age ${currentAge}` ||
+              payload.age === `Age ${retireAge}`
+            )
+              ? "block"
+              : "none", // Hide the active dot on hover for specific ages
+        }}
+      />
+    );
+  };
+
+  const CustomActiveDot = (props) => {
+    const { cx, cy, value, payload, dataKey, isActive } = props;
+
+    // Only render the active dot for specific ages (currentAge, retireAge, Age 55, Age 56)
+    if (
+      !(
+        payload.age === `Age ${currentAge}` ||
+        payload.age === `Age ${retireAge}` ||
+        payload.age === "Age 55" ||
+        payload.age === "Age 56"
+      )
+    ) {
+      return null; // Don't render active dot for other ages
     }
 
     // Set the color based on the dataKey
@@ -520,8 +570,8 @@ const PensionCalculator = () => {
               verticalAlign="bottom"
               height={23}
               payload={[
-                { value: "ER at 5%", type: "line", color: "#FF5F15" },
                 { value: "ER at 3%", type: "line", color: "#003366" },
+                { value: "ER at 5%", type: "line", color: "#FF5F15" },
                 { value: "ER at 7%", type: "line", color: "#FFB400" },
               ]}
               formatter={(value) => (
@@ -543,7 +593,7 @@ const PensionCalculator = () => {
               dataKey="value1"
               stroke="#FF5F15"
               strokeWidth={3}
-              activeDot={{ r: 8 }}
+              activeDot={<CustomActiveDot />}
             />
             {/* Navy Blue Line */}
             <Line
@@ -552,7 +602,7 @@ const PensionCalculator = () => {
               dataKey="value2"
               stroke="#003366" // Navy Blue for the line
               strokeWidth={3}
-              activeDot={{ r: 8 }}
+              activeDot={<CustomActiveDot />}
             />
 
             {/* Golden Yellow Line */}
@@ -562,12 +612,11 @@ const PensionCalculator = () => {
               dataKey="value3"
               stroke="#FFB400"
               strokeWidth={3}
-              activeDot={{ r: 8 }}
+              activeDot={<CustomActiveDot />}
             />
           </LineChart>
         </ResponsiveContainer>
       </Box>
-
       <Box
         sx={{
           width: { xs: "100%", sm: "80%", md: "50%" },
